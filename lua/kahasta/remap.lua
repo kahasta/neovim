@@ -18,3 +18,15 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("i", "jj", "<Esc>")
 -- Для замены выбранного слова во всем буфере
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- Для прыжков по словам и символам
+vim.keymap.set("n", "<leader>fw", vim.cmd.HopWord, { desc = "Hop Word" })
+vim.keymap.set("n", "<leader>fc", vim.cmd.HopChar1, { desc = "Hop Char" })
+vim.keymap.set("n", "<leader>fa", vim.cmd.HopAnywhere, { desc = "Hop Anywhere" })
+vim.keymap.set("v", "<leader>fw", vim.cmd.HopWord, { desc = "Hop Word" })
+vim.keymap.set("v", "<leader>fc", vim.cmd.HopChar1, { desc = "Hop Char" })
+vim.keymap.set("v", "<leader>fa", vim.cmd.HopAnywhere, { desc = "Hop Anywhere" })
+
+
+vim.keymap.set("n", "<leader>bc", vim.cmd.BufferClose, { desc = "Close Buffer" })
+vim.keymap.set("n", "<M-Tab>", vim.cmd.BufferNext, { desc = "Next Buffer" })
