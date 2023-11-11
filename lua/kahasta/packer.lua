@@ -5,6 +5,8 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
     -- Packer can manage itself
+    local packer = require('packer')
+    packer.auto_compile = true
     use 'wbthomason/packer.nvim'
 
     use {
@@ -12,16 +14,23 @@ return require('packer').startup(function(use)
         -- or                            , branch = '0.1.x',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
+    use { "smartpde/telescope-recent-files" }
 
     -- Themes
+    -- use({
+    --     'rose-pine/neovim',
+    --     as = 'rose-pine',
+    --     config = function()
+    --         vim.cmd('colorscheme rose-pine')
+    --     end
+    -- })
     use({
-        'rose-pine/neovim',
-        as = 'rose-pine',
+        "rafamadriz/neon",
         config = function()
-            vim.cmd('colorscheme rose-pine')
+            vim.g.neon_style = "doom"
+            vim.cmd [[colorscheme neon]]
         end
     })
-
 
 
 
@@ -188,4 +197,58 @@ return require('packer').startup(function(use)
             require 'alpha'.setup(require 'alpha.themes.startify'.config)
         end
     }
+
+    use {
+        "windwp/nvim-autopairs",
+        config = function() require("nvim-autopairs").setup {} end
+    }
+    -- Для скачков по F f t T
+    use {
+        "rhysd/clever-f.vim",
+        config = function()
+            -- config
+        end
+    }
+    use { 'akinsho/bufferline.nvim', tag = "*", requires = 'nvim-tree/nvim-web-devicons' }
+    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
+        require("toggleterm").setup()
+    end }
+    -- Highlight words
+    use { "RRethy/vim-illuminate" }
+    use { 'charludo/projectmgr.nvim' }
+    use { "anuvyklack/windows.nvim",
+        requires = {
+            "anuvyklack/middleclass",
+            "anuvyklack/animation.nvim"
+        },
+        config = function()
+            vim.o.winwidth = 10
+            vim.o.winminwidth = 10
+            vim.o.equalalways = false
+            require('windows').setup()
+        end
+    }
+
+    use { 'echasnovski/mini.nvim', branch = 'stable',
+        config = function()
+            require('mini.animate').setup()
+        end
+    }
+    use { 'HiPhish/rainbow-delimiters.nvim', config = function()
+    end }
+    -- join in line code or unpack
+    use({
+        'Wansmer/treesj',
+        requires = { 'nvim-treesitter/nvim-treesitter' },
+        config = function()
+            require('treesj').setup({ --[[ your config ]] })
+        end,
+    })
+
+    -- Window Resizing
+    use {
+        'simeji/winresizer',
+    }
+    -- Debugger
+    use { 'mfussenegger/nvim-dap' }
 end)
