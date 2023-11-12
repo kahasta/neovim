@@ -1,5 +1,4 @@
 local wk = require("which-key")
-vim.g.mapleader = " "
 -- Форматирование кода
 vim.keymap.set("n", "<C-M-l>", vim.cmd.LspZeroFormat, { desc = "LspZeroFormat" })
 
@@ -15,6 +14,9 @@ vim.keymap.set("i", "jj", "<Esc>")
 
 
 vim.keymap.set("n", "<M-Tab>", vim.cmd.BufferNext, { desc = "Next Buffer" })
+
+-- Nvim-tree file Explorer
+vim.keymap.set("n", "<C-n>", "<cmd> Neotree %:h <CR>", { desc = "Next Buffer" })
 
 -- vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
 -- vim.keymap.set('n', '<C-p>', builtin.git_files, {})
@@ -66,10 +68,15 @@ wk.register({
         p = {
             name = "Telescope",
             v = { vim.cmd.Ex, "Explorer" },
-            f = { require('telescope.builtin').find_files, "Find files" },
+            f = { function()
+                require('telescope.builtin').find_files({ cwd = require('telescope.utils').buffer_dir() })
+            end, "Find files in current dir" },
+            a = { require('telescope').extensions.live_grep_args.live_grep_args, "Find all" },
             s = { function()
                 require('telescope.builtin').grep_string({ search = vim.fn.input("Grep > ") });
             end, "Grep search" },
+            h = { "<cmd> Telescope help_tags <CR>", "Help page" },
+            z = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
 
         },
 
@@ -80,7 +87,7 @@ wk.register({
 
         n = {
             name = "Neovim Commands",
-            p = { ":PackerSync<CR>", "PackerSync" },
+            l = { ":Lazy<CR>", "Lazy" },
         },
 
         s = {
