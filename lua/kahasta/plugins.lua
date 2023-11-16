@@ -16,22 +16,44 @@ return {
     { "smartpde/telescope-recent-files" },
 
     -- Themes
-    -- ({
-    --     'rose-pine/neovim',
-    --     as = 'rose-pine',
-    --     config = function()
-    --         vim.cmd('colorscheme rose-pine')
-    --     end
-    -- })
+    {
+        'rose-pine/neovim',
+        as = 'rose-pine',
+        config = function()
+            -- vim.cmd('colorscheme rose-pine')
+        end
+    },
     {
         "rafamadriz/neon",
         config = function()
             vim.g.neon_style = "doom"
-            vim.cmd [[colorscheme neon]]
+            -- vim.cmd [[colorscheme neon]]
         end
     },
 
-
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        config = function()
+            -- vim.cmd [[colorscheme tokyonight-moon]]
+        end
+    },
+    'tomasiser/vim-code-dark',
+    'marko-cerovac/material.nvim',
+    { "bluz71/vim-nightfly-colors",     name = "nightfly", lazy = false, priority = 1000 },
+    { "bluz71/vim-moonfly-colors",      name = "moonfly",  lazy = false, priority = 1000 },
+    'sainnhe/sonokai',
+    'nyoom-engineering/oxocarbon.nvim',
+    'glepnir/zephyr-nvim',
+    'rockerBOO/boo-colorscheme-nvim',
+    'jim-at-jibba/ariake-vim-colors',
+    'mhartington/oceanic-next',
+    'tjdevries/colorbuddy.vim',
+    'Th3Whit3Wolf/onebuddy',
+    'sainnhe/edge',
+    -- Theme selector
+    'lrangell/theme-cycler.nvim',
 
     { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
     'nvim-treesitter/playground',
@@ -99,6 +121,13 @@ return {
 
     {
         'nvim-lualine/lualine.nvim',
+        confiq = function()
+            require('lualine').setup {
+                -- options = {
+                --     theme = 'tokyonight'
+                -- }
+            }
+        end,
         dependencies = { 'nvim-tree/nvim-web-devicons', opt = true }
     },
 
@@ -126,18 +155,10 @@ return {
         end
     },
     {
-        "norcalli/nvim-colorizer.lua",
+        'NvChad/nvim-colorizer.lua',
         config = function()
-            require("colorizer").setup({ "css", "scss", "html", "javascript", "dart" }, {
-                RGB = true,      -- #RGB hex codes
-                RRGGBB = true,   -- #RRGGBB hex codes
-                RRGGBBAA = true, -- #RRGGBBAA hex codes
-                rgb_fn = true,   -- CSS rgb() and rgba() functions
-                hsl_fn = true,   -- CSS hsl() and hsla() functions
-                css = true,      -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-                css_fn = true,   -- Enable all CSS *functions*: rgb_fn, hsl_fn
-            })
-        end,
+            require 'colorizer'.setup()
+        end
     },
     {
         "ray-x/lsp_signature.nvim",
@@ -211,9 +232,9 @@ return {
         end
     },
     -- amongst your other plugins
-    { 'akinsho/toggleterm.nvim', version = "*", config = true },
+    { 'akinsho/toggleterm.nvim',         version = "*",      config = true },
     -- or
-    { 'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons' },
+    { 'akinsho/bufferline.nvim',         version = "*",      dependencies = 'nvim-tree/nvim-web-devicons' },
     -- Highlight words
     { "RRethy/vim-illuminate" },
     { 'charludo/projectmgr.nvim' },
@@ -258,26 +279,70 @@ return {
     { 'mfussenegger/nvim-dap' },
 
     -- {
-    --     "nvim-tree/nvim-tree.lua",
-    --     version = "*",
-    --     lazy = false,
+    --     "nvim-neo-tree/neo-tree.nvim",
+    --     branch = "v3.x",
     --     dependencies = {
-    --         "nvim-tree/nvim-web-devicons",
-    --     },
-    --     config = function()
-    --         require("nvim-tree").setup {}
-    --     end,
+    --         "nvim-lua/plenary.nvim",
+    --         "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    --         "MunifTanjim/nui.nvim",
+    --         -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    --     }
     -- },
     {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
+        "nvim-tree/nvim-tree.lua",
+        version = "*",
+        lazy = false,
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "nvim-tree/nvim-web-devicons",
+        },
+        config = function()
+            local function my_on_attach(bufnr)
+                local api = require "nvim-tree.api"
+
+                local function opts(desc)
+                    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+                end
+
+                -- default mappings
+                api.config.mappings.default_on_attach(bufnr)
+
+                -- custom mappings
+                vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+            end
+            require("nvim-tree").setup {
+                on_attach = my_on_attach,
+            }
+        end,
+    },
+    {
+        -- Для сворачивания кода функций и тд
+        'kevinhwang91/nvim-ufo',
+        dependencies = 'kevinhwang91/promise-async',
+        config = function()
+            vim.o.foldcolumn = '1' -- '0' is not bad
+            vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
+            vim.o.foldlevelstart = 99
+            vim.o.foldenable = true
+            -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
+            vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+            vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+            require('ufo').setup();
+        end
+    },
+    'xiyaowong/transparent.nvim',
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        opts = {
+            -- add any options here
+        },
+        dependencies = {
+            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
             "MunifTanjim/nui.nvim",
-            -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+            -- OPTIONAL:
+            --   `nvim-notify` is only needed, if you want to use the notification view.
+            --   If not available, we use `mini` as the fallback
+            "rcarriga/nvim-notify",
         }
     },
-
-
 }

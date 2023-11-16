@@ -16,7 +16,7 @@ vim.keymap.set("i", "jj", "<Esc>")
 vim.keymap.set("n", "<M-Tab>", vim.cmd.BufferNext, { desc = "Next Buffer" })
 
 -- Nvim-tree file Explorer
-vim.keymap.set("n", "<C-n>", "<cmd> Neotree %:h <CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", "<C-n>", "<cmd> NvimTreeToggle %:h <CR>", { desc = "Next Buffer" })
 
 -- vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
 -- vim.keymap.set('n', '<C-p>', builtin.git_files, {})
@@ -25,6 +25,8 @@ vim.keymap.set("n", "<C-n>", "<cmd> Neotree %:h <CR>", { desc = "Next Buffer" })
 -- end)
 -- vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 --
+
+vim.keymap.set('n', '<F2>', "<cmd>lua vim.diagnostic.goto_next()<CR>")
 
 vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
 vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
@@ -44,7 +46,9 @@ wk.register({
         ,
         b = {
             name = "Buffer",
+            b = { "<cmd> Telescope buffers <CR>", "Show open Buffers" },
             c = { vim.cmd.BufferClose, "BufferClose" },
+            C = { "<cmd>BufferClose!<CR>", "BufferClose --force" }
         },
 
         d = {
@@ -67,7 +71,7 @@ wk.register({
         },
         p = {
             name = "Telescope",
-            v = { vim.cmd.Ex, "Explorer" },
+            v = { '<cmd> NvimTreeFindFileToggle %:h <CR>', "Explorer" },
             f = { function()
                 require('telescope.builtin').find_files({ cwd = require('telescope.utils').buffer_dir() })
             end, "Find files in current dir" },
@@ -85,15 +89,28 @@ wk.register({
             p = { vim.cmd.ProjectMgr, "Start ProjectMgr" },
         },
 
+        m = {
+            name = "Bookmarks",
+            a = { ":lua require'harpoon.mark'.add_file()<CR>", "Add bookmark" },
+            l = { ":lua require'harpoon.ui'.toggle_quick_menu()<CR>", "Open bookmarks" },
+
+        },
+
         n = {
             name = "Neovim Commands",
             l = { ":Lazy<CR>", "Lazy" },
+            t = { vim.cmd.TransparentToggle, "Transparent Toggle" },
         },
 
         s = {
             name = "Search",
             s = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], "Search word and Replace in buffer" },
 
+        },
+
+        t = {
+            name = "Themes",
+            t = { ":lua require'themeCycler'.open()<CR>", "Themes choose" },
         },
 
         y = {
@@ -112,6 +129,7 @@ wk.register({
             w = { function() vim.lsp.buf.workspace_symbol() end, "Lsp workspace" },
             d = { function() vim.diagnostic.open_float() end, "Diagnostic open_float" },
             a = { function() vim.lsp.buf.code_action() end, "Code action" },
+            e = { "<cmd>Telescope diagnostics<CR>", "Telescope errors, warnings etc" },
             l = { function() vim.lsp.buf.references() end, "references" },
             r = { function() vim.lsp.buf.rename() end, "lsp rename" },
             h = { function() vim.lsp.buf.signature_help() end, "signature help" },
@@ -126,6 +144,7 @@ wk.register({
             r = { vim.cmd.WinResizerStartResize, "Resize Windows" },
 
         },
+
 
     }
 })
@@ -144,6 +163,12 @@ wk.register({
             w = { vim.cmd.HopWord, "Hop Word" },
             c = { vim.cmd.HopChar1, "Hop Char" },
             a = { vim.cmd.HopAnywhere, "Hop Anywhere" },
+        },
+
+        z = {
+            name = "True Zen in visual",
+            v = { ":'<,'>TZNarrow<CR>", "arrow zen visual" },
+
         },
     }
 })
