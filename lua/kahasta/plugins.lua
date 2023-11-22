@@ -11,8 +11,25 @@ return {
                 -- For major updates, this must be adjusted manually.
                 version = "^1.0.0",
             },
-        }
+        },
+        config = function()
+            require("telescope").load_extension("live_grep_args")
+            require("telescope").setup {
+                extensions = {
+                    fzf = {
+                        fuzzy = true, -- false will only do exact matching
+                        override_generic_sorter = true, -- override the generic sorter
+                        override_file_sorter = true, -- override the file sorter
+                        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+                        -- the default case_mode is "smart_case"
+                    }
+                }
+            }
+            require("telescope").load_extension("fzf")
+        end
     },
+    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+
     { "smartpde/telescope-recent-files" },
 
     -- Themes
@@ -41,8 +58,8 @@ return {
     },
     'tomasiser/vim-code-dark',
     'marko-cerovac/material.nvim',
-    { "bluz71/vim-nightfly-colors",     name = "nightfly", lazy = false, priority = 1000 },
-    { "bluz71/vim-moonfly-colors",      name = "moonfly",  lazy = false, priority = 1000 },
+    { "bluz71/vim-nightfly-colors", name = "nightfly", lazy = false, priority = 1000 },
+    { "bluz71/vim-moonfly-colors",  name = "moonfly",  lazy = false, priority = 1000 },
     'sainnhe/sonokai',
     'nyoom-engineering/oxocarbon.nvim',
     'glepnir/zephyr-nvim',
@@ -78,6 +95,7 @@ return {
             { 'L3MON4D3/LuaSnip' },
         }
     },
+
 
     {
         "folke/which-key.nvim",
@@ -201,13 +219,27 @@ return {
         -- end
     },
 
+    -- {
+    --     'phaazon/hop.nvim',
+    --     branch = 'v2', -- optional but strongly recommended
+    --     config = function()
+    --         -- you can configure Hop the way you like here; see :h hop-config
+    --         require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+    --     end
+    -- },
     {
-        'phaazon/hop.nvim',
-        branch = 'v2', -- optional but strongly recommended
-        config = function()
-            -- you can configure Hop the way you like here; see :h hop-config
-            require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
-        end
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        --@type Flash.Config
+        opts = {},
+        -- stylua: ignore
+        keys = {
+            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+        },
     },
     -- Barbar
     'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
@@ -225,12 +257,12 @@ return {
         config = function() require("nvim-autopairs").setup {} end
     },
     -- Для скачков по F f t T
-    {
-        "rhysd/clever-f.vim",
-        config = function()
-            -- config
-        end
-    },
+    -- {
+    --     "rhysd/clever-f.vim",
+    --     config = function()
+    --         -- config
+    --     end
+    -- },
     -- amongst your other plugins
     { 'akinsho/toggleterm.nvim',         version = "*",      config = true },
     -- or
@@ -278,42 +310,42 @@ return {
     -- Debugger
     { 'mfussenegger/nvim-dap' },
 
-    -- {
-    --     "nvim-neo-tree/neo-tree.nvim",
-    --     branch = "v3.x",
-    --     dependencies = {
-    --         "nvim-lua/plenary.nvim",
-    --         "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    --         "MunifTanjim/nui.nvim",
-    --         -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-    --     }
-    -- },
     {
-        "nvim-tree/nvim-tree.lua",
-        version = "*",
-        lazy = false,
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
         dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-            local function my_on_attach(bufnr)
-                local api = require "nvim-tree.api"
-
-                local function opts(desc)
-                    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-                end
-
-                -- default mappings
-                api.config.mappings.default_on_attach(bufnr)
-
-                -- custom mappings
-                vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
-            end
-            require("nvim-tree").setup {
-                on_attach = my_on_attach,
-            }
-        end,
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+            -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+        }
     },
+    -- {
+    --     "nvim-tree/nvim-tree.lua",
+    --     version = "*",
+    --     lazy = false,
+    --     dependencies = {
+    --         "nvim-tree/nvim-web-devicons",
+    --     },
+    --     config = function()
+    --         local function my_on_attach(bufnr)
+    --             local api = require "nvim-tree.api"
+    --
+    --             local function opts(desc)
+    --                 return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    --             end
+    --
+    --             -- default mappings
+    --             api.config.mappings.default_on_attach(bufnr)
+    --
+    --             -- custom mappings
+    --             vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+    --         end
+    --         require("nvim-tree").setup {
+    --             on_attach = my_on_attach,
+    --         }
+    --     end,
+    -- },
     {
         -- Для сворачивания кода функций и тд
         'kevinhwang91/nvim-ufo',
@@ -330,19 +362,67 @@ return {
         end
     },
     'xiyaowong/transparent.nvim',
+    -- {
+    --     "folke/noice.nvim",
+    --     event = "VeryLazy",
+    --     opts = {
+    --         -- add any options here
+    --     },
+    --     dependencies = {
+    --         -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+    --         "MunifTanjim/nui.nvim",
+    --         -- OPTIONAL:
+    --         --   `nvim-notify` is only needed, if you want to use the notification view.
+    --         --   If not available, we use `mini` as the fallback
+    --         "rcarriga/nvim-notify",
+    --     }
+    -- },
     {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        opts = {
-            -- add any options here
-        },
+        'stevearc/aerial.nvim',
+        opts = {},
+        -- Optional dependencies
         dependencies = {
-            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-            "MunifTanjim/nui.nvim",
-            -- OPTIONAL:
-            --   `nvim-notify` is only needed, if you want to use the notification view.
-            --   If not available, we use `mini` as the fallback
-            "rcarriga/nvim-notify",
-        }
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-tree/nvim-web-devicons"
+        },
     },
+
+    {
+        "epwalsh/obsidian.nvim",
+        version = "*", -- recommended, use latest release instead of latest commit
+        lazy = true,
+        ft = "markdown",
+        -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+        -- event = {
+        --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+        --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+        --   "BufReadPre path/to/my-vault/**.md",
+        --   "BufNewFile path/to/my-vault/**.md",
+        -- },
+        dependencies = {
+            -- Required.
+            "nvim-lua/plenary.nvim",
+
+            -- see below for full list of optional dependencies 👇
+        },
+        opts = {
+            workspaces = {
+                {
+                    name = "personal",
+                    path = "~/obsidian/Mysave",
+                },
+            },
+
+            -- see below for full list of options 👇
+        },
+    },
+    {
+        'rcarriga/nvim-notify',
+        config = function()
+            vim.notify = require('notify');
+        end
+    },
+
+    { 'airblade/vim-rooter' },
+
 }
