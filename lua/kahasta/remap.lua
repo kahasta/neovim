@@ -54,7 +54,13 @@ wk.register({
 
         d = {
             name = "Debug",
-            b = { ":lua require'dap'.toggle_breakpoint()<CR>", "toggle breakpoint" }
+            b = { ":lua require'dap'.toggle_breakpoint()<CR>", "toggle breakpoint" },
+            o = { ":lua require'dapui'.toggle()<CR>", "open debug ui" },
+        },
+
+        e = {
+            name = "Edit functions",
+            w = { "<cmd>lua MiniTrailspace.trim()<CR>", "Clear whitespaces" },
         },
 
         f = {
@@ -66,7 +72,7 @@ wk.register({
 
         o = {
             name = "Open...",
-            t = { vim.cmd.ToggleTerm, "Open Terminal" },
+            t = { "<cmd>lua require('FTerm').toggle()<CR>", "Open Terminal" },
             r = { "<cmd>lua require('telescope').extensions.recent_files.pick()<CR>", "Open Recents" },
 
         },

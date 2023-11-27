@@ -17,10 +17,10 @@ return {
             require("telescope").setup {
                 extensions = {
                     fzf = {
-                        fuzzy = true, -- false will only do exact matching
+                        fuzzy = true,                   -- false will only do exact matching
                         override_generic_sorter = true, -- override the generic sorter
-                        override_file_sorter = true, -- override the file sorter
-                        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+                        override_file_sorter = true,    -- override the file sorter
+                        case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
                         -- the default case_mode is "smart_case"
                     }
                 }
@@ -84,7 +84,7 @@ return {
         dependencies = {
             --- Uncomment these if you want to manage LSP servers from neovim
             { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
+            { 'williamjoman/mason-lspconfig.nvim' },
             -- im add this for show info where typing code
             { "folke/neodev.nvim",                opts = {} },
             -- LSP Support
@@ -244,13 +244,14 @@ return {
     -- Barbar
     'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
     'romgrk/barbar.nvim',
-    {
-        'goolord/alpha-nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config = function()
-            require 'alpha'.setup(require 'alpha.themes.startify'.config)
-        end
-    },
+    -- {
+    --     'goolord/alpha-nvim',
+    --     dependencies = { 'nvim-tree/nvim-web-devicons' },
+    --     config = function()
+    --         require 'alpha'.setup(require 'alpha.themes.startify'.config)
+    --     end
+    -- },
+
 
     {
         "windwp/nvim-autopairs",
@@ -264,9 +265,16 @@ return {
     --     end
     -- },
     -- amongst your other plugins
-    { 'akinsho/toggleterm.nvim',         version = "*",      config = true },
+    -- { 'akinsho/toggleterm.nvim',         version = "*",      config = true },
     -- or
     { 'akinsho/bufferline.nvim',         version = "*",      dependencies = 'nvim-tree/nvim-web-devicons' },
+
+    {
+        "numToStr/FTerm.nvim",
+        config = function()
+
+        end
+    },
     -- Highlight words
     { "RRethy/vim-illuminate" },
     { 'charludo/projectmgr.nvim' },
@@ -309,6 +317,25 @@ return {
     },
     -- Debugger
     { 'mfussenegger/nvim-dap' },
+    {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "mfussenegger/nvim-dap", "folke/neodev.nvim" },
+        config = function()
+            require("neodev").setup({
+                library = { plugins = { "nvim-dap-ui" }, types = true },
+            })
+            require("dapui").setup()
+        end
+    },
+
+    {
+        'theHamsta/nvim-dap-virtual-text',
+        config = function()
+            require("nvim-dap-virtual-text").setup {
+                commented = true,
+            }
+        end
+    },
 
     {
         "nvim-neo-tree/neo-tree.nvim",
@@ -424,5 +451,33 @@ return {
     },
 
     { 'airblade/vim-rooter' },
+    {
+        'nacro90/numb.nvim',
+        config = function()
+            require('numb').setup()
+        end
+    },
 
+    -- 'ntpeters/vim-better-whitespace',
+    {
+        'echasnovski/mini.nvim',
+        version = false,
+        config = function()
+            require('mini.completion').setup()
+            require('mini.indentscope').setup()
+            require('mini.move').setup() -- M-h M-l M-j M-k move selected lines and etc
+            local starter = require('mini.starter')
+            require('mini.starter').setup({
+                items = {
+                    starter.sections.builtin_actions(),
+                    starter.sections.recent_files(10, false),
+                    starter.sections.recent_files(10, true),
+                    -- Use this if you set up 'mini.sessions'
+                    starter.sections.sessions(5, true)
+                }
+            })
+
+            require('mini.trailspace').setup()
+        end
+    },
 }
