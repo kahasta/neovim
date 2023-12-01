@@ -463,7 +463,7 @@ return {
         'echasnovski/mini.nvim',
         version = false,
         config = function()
-            require('mini.completion').setup()
+            -- require('mini.completion').setup()
             require('mini.indentscope').setup()
             require('mini.move').setup() -- M-h M-l M-j M-k move selected lines and etc
             local starter = require('mini.starter')
